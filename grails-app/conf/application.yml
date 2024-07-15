@@ -53,7 +53,7 @@ grails:
       - text/xml
       - application/xml
 dataSource:
-  url: jdbc:postgresql://localhost:5432/testingSecurity
+  url: jdbc:postgresql://localhost:5432/testing
   dialect: org.hibernate.dialect.PostgreSQL82Dialect
   driverClassName: org.postgresql.Driver
   username: postgres

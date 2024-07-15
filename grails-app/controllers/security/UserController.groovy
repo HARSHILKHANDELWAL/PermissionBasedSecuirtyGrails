@@ -36,7 +36,7 @@ class UserController {
 
 //    @Secured(['PERMISSION_USER_ACCESS'])
 //    @PreAuthorize("hasPermission(authentication, 'PERMISSION_USER_ACCESS')")
-    @PreAuthorize("hasPermission('Role', 'PERMISSION_USER_ACCESS')")
+    @PreAuthorize("hasPermission('Role', 'PERMISSION_USER_ACCES')")
     def accessByUser() {
         render 'Access by  user successfully'
     }

@@ -1,5 +1,7 @@
 package spring
 
+import security.UserPasswordEncoderListener
+
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
 import security.CustomFilter
 import security.CustomPermissionEvaluator
