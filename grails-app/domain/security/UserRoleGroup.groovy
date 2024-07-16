@@ -5,7 +5,6 @@ import groovy.transform.ToString
 import org.codehaus.groovy.util.HashCodeHelper
 import grails.compiler.GrailsCompileStatic
 
-@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRoleGroup implements Serializable {
 
@@ -32,7 +31,7 @@ class UserRoleGroup implements Serializable {
 		}
 		hashCode
 	}
-	
+
 	static UserRoleGroup get(long userId, long roleGroupId) {
 		criteriaFor(userId, roleGroupId).get()
 	}
@@ -81,6 +80,5 @@ class UserRoleGroup implements Serializable {
 
 	static mapping = {
 		id composite: ['roleGroup', 'user']
-		version false
 	}
 }

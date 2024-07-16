@@ -1,12 +1,12 @@
 package security
 
+import grails.converters.JSON
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
 import grails.compiler.GrailsCompileStatic
 
-@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class RoleGroupRole implements Serializable {
 
@@ -52,7 +52,7 @@ class RoleGroupRole implements Serializable {
 	static RoleGroupRole create(RoleGroup roleGroup, Role role, boolean flush = false) {
 		def instance = new RoleGroupRole(roleGroup: roleGroup, role: role)
 		instance.save(flush: flush)
-		instance
+		 instance
 	}
 
 	static boolean remove(RoleGroup rg, Role r) {
@@ -82,6 +82,5 @@ class RoleGroupRole implements Serializable {
 
 	static mapping = {
 		id composite: ['roleGroup', 'role']
-		version false
 	}
 }

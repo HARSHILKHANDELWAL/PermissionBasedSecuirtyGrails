@@ -17,8 +17,8 @@ class User implements Serializable {
     boolean accountLocked
     boolean passwordExpired
 
-    Set<Role> getAuthorities() {
-        (UserRole.findAllByUser(this) as List<UserRole>)*.role as Set<Role>
+    Set<RoleGroup> getAuthorities() {
+        (UserRoleGroup.findAllByUser(this) as List<UserRoleGroup>)*.roleGroup as Set<RoleGroup>
     }
 
     static constraints = {
@@ -27,8 +27,8 @@ class User implements Serializable {
     }
 
     static mapping = {
-	    password column: '`password`'
-        table '`user`'
+        table name: '`user`'
+        password column: '`password`'
 
     }
 }
