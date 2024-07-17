@@ -3,6 +3,7 @@ package security
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
+import org.postgresql.jdbc.PreferQueryMode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.access.prepost.PreAuthorize
@@ -22,8 +23,11 @@ class UserController {
             new UserService()
 
     def createUser() {
+        def demoUser = request.JSON.user
+        def password = request.JSON.password
+        def role = request.JSON.role
         try {
-            def user = userService.createUser("admin", "admin")
+            def user = userService.createUser(demoUser, password, role)
             println(user as JSON)
             if (user == null)
                 render 'Already created successfully'
@@ -36,25 +40,38 @@ class UserController {
         }
     }
 
-    def assignRoleToGroup() {
-
-        def roleGroup = RoleGroup.findByName('ADMIN_GROUP') ?: new RoleGroup(name: 'ADMIN_GROUP').save(flush: true)
-        def role = Role.findByAuthority('ROLE_ADMIN') ?: new Role(authority: 'ROLE_ADMIN', tenantId: 'UNO_T1').save(flush: true)
-        def assignRole = RoleGroupRole.create(roleGroup, role, true)
-        render assignRole
-    }
-    def assignPermission() {
-
-        def roleGroup = RoleGroup.findByName('ADMIN_GROUP') ?: new RoleGroup(name: 'ADMIN_GROUP').save(flush: true)
-        def permission = Permission.findByName('PERMISSION_WRITE') ?: new Permission(name: 'PERMISSION_WRITE', tenantId: 'UNO_T1').save(flush: true)
-        def assignPermission = RoleGroupPermission.create(roleGroup, permission, true)
-        render assignPermission as JSON
-    }
-
-
     def createRoleGroup() {
-        def userRole = RoleGroup.findByName('ADMIN_GROUP') ?: new RoleGroup(name: 'ADMIN_GROUP').save(flush: true)
+        def group = request.JSON.group
+        def userRole = RoleGroup.findByName(group) ?: new RoleGroup(name: group).save(flush: true)
         render userRole as JSON
+    }
+
+    def assignRoleToGroup() {
+        def group = request.JSON.group
+        def newRole = request.JSON.role
+        def roleGroup = RoleGroup.findByName(group) ?: new RoleGroup(name: group).save(flush: true)
+        def role = Role.findByAuthorityAndTenantId(newRole, 'UNO_T2') ?: new Role(authority: newRole, tenantId: 'UNO_T2').save(flush: true)
+        if (!RoleGroupRole.exists(roleGroup.id, role.id, "UNO_T2")) {
+            def assignRole = RoleGroupRole.create(roleGroup, role, "UNO_T2", true)
+
+            render assignRole
+        } else
+            render "Already Exist "
+    }
+
+    def assignPermission() {
+        def group = request.JSON.group
+        def newPermission = request.JSON.permission
+        def roleGroup = RoleGroup.findByName(group) ?: new RoleGroup(name: group).save(flush: true)
+        def permission = Permission.findByNameAndTenantId(newPermission,'UNO_T2') ?: new Permission(name: newPermission, tenantId: 'UNO_T2').save(flush: true)
+        if (!RoleGroupPermission.exists(roleGroup.id, permission.id)) {
+            def assignPermission = RoleGroupPermission.create(roleGroup, permission, true)
+            render assignPermission as JSON
+
+        } else
+            render "Already exists"
+
+
     }
 
 
